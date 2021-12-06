@@ -65,6 +65,17 @@ impl<'a> CommitRefIter<'a> {
                 _ => None,
             })
     }
+
+    /// TODO:
+    pub fn committer(&mut self) -> Option<git_actor::SignatureRef<'_>> {
+        self.filter_map(Result::ok)
+            .find(|t| matches!(t, Token::Committer { .. }))
+            .map(|t| match t {
+                Token::Committer { signature } => Some(signature),
+                _ => None,
+            })
+            .flatten()
+    }
 }
 
 impl<'a> CommitRefIter<'a> {
